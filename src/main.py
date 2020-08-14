@@ -23,7 +23,7 @@ class Location:
         return self.code
 
     def __repr__(self):
-        return f'{self.code} is at {self.latitude}, {self.longitude}, ({self.name})'
+        return f'{self.code} is at {self.latitude}, {self.longitude} ({self.name})'
 
 
 class Trip:
@@ -44,7 +44,8 @@ class Trip:
         return f'{self.depart},{self.arrive},{self.repetitions}'
 
     def __repr__(self):
-        return f'From {self.depart} to {self.arrive} is {self.distance} km, {self.repetitions} times'
+        return f'From {self.depart} to {self.arrive} is {self.distance} km, {self.repetitions} ' \
+               f'time{"" if self.repetitions == 1 else "s"} '
 
 
 def get_trips(data):
@@ -81,7 +82,7 @@ def combine_trips(data):
         else:
             trips[trip].repetitions += trip.repetitions
 
-    return trips.values()
+    return [trip for trip in trips.values()]
 
 
 def populate_details(all_coordinates: pd.DataFrame, location: Location):
@@ -168,22 +169,21 @@ class Tests(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_display_example(self):
-        self.skipTest('')
+        # self.skipTest('')
 
         with open(path_to_flights) as file:
             data = file.readlines()
 
         all_coordinates = pd.read_csv(path_to_all_coordinates_csv)
-
         trips = combine_trips(get_trips(data))
 
-        for trip in trips[:1]:
+        for trip in trips[:10]:
             populate_details(all_coordinates, trip.depart)
             populate_details(all_coordinates, trip.arrive)
 
             print(repr(trip))
-            print(repr(trip.depart))
-            print(repr(trip.arrive))
+            print('  ' + repr(trip.depart))
+            print('  ' + repr(trip.arrive))
             print()
 
 
