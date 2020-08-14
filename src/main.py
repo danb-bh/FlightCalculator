@@ -24,7 +24,7 @@ def get_locations(data):
     yield current
 
 
-def find_full_names(data):
+def get_full_names(data):
     found = set()
     for line in data:
         elements = line.split(',')[:2]
@@ -34,9 +34,45 @@ def find_full_names(data):
                 yield element
 
 
+def determine_trips(data):
+    trips = {}
+
+    for line in data:
+        elements = line.split(',')
+        key = elements[0] + ',' + elements[1]
+        times = 1 if len(elements) == 2 else int(elements[2])
+
+        if key not in trips:
+            trips[key] = times
+        else:
+            trips[key] += times
+
+    return trips
+
+
 class Tests(unittest.TestCase):
 
-    def test_find_full_names(self):
+    def test_determine_trips(self):
+        data = [
+            'LHR,AGP,2',
+            'AGP,LHR,2',
+            'LGW,TXL',
+            'TXL,LGW',
+            'LGW,TXL',
+            'TXL,LGW',
+            'DOH,LHR'
+        ]
+        expected = {
+            'LHR,AGP': 2,
+            'AGP,LHR': 2,
+            'LGW,TXL': 2,
+            'TXL,LGW': 2,
+            'DOH,LHR': 1
+        }
+        actual = determine_trips(data)
+        self.assertEqual(expected, actual)
+
+    def test_get_full_names(self):
         data = [
             'LONDON,MALAGA,2',
             'MALAGA,LONDON,2',
@@ -44,7 +80,7 @@ class Tests(unittest.TestCase):
             'TXL,LHR']
 
         expected = ['LONDON', 'MALAGA']
-        actual = list(find_full_names(data))
+        actual = list(get_full_names(data))
         self.assertEqual(expected, actual)
 
     def test_get_locations(self):
@@ -52,8 +88,8 @@ class Tests(unittest.TestCase):
             'from,to,repetitions',
             '---',
             '',
-            'london , malaga , 2 ',
-            'malaga,london,2',
+            ' LHR , AGP , 2 ',
+            'AGP,LHR,2',
             '',
             'July 2019',
             '---',
@@ -61,8 +97,8 @@ class Tests(unittest.TestCase):
             'TXL,LHR']
 
         expected = [
-            'LONDON,MALAGA,2',
-            'MALAGA,LONDON,2',
+            'LHR,AGP,2',
+            'AGP,LHR,2',
             'LHR,TXL',
             'TXL,LHR']
 
@@ -70,13 +106,13 @@ class Tests(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_display_example(self):
-        # self.skipTest('')
+        self.skipTest('')
         path = '../examples/flights.txt'
         with open(path) as file:
             data = file.readlines()
 
         data = get_locations(data)
-        full_names = find_full_names(data)
+        full_names = get_full_names(data)
         for datum in full_names: print(datum)
 
 
