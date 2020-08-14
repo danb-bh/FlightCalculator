@@ -1,4 +1,5 @@
 import unittest
+import pandas as pd
 
 
 def get_locations(data):
@@ -50,7 +51,34 @@ def determine_trips(data):
     return trips
 
 
+def get_coordinates(all_coordinates, airport):
+    df = all_coordinates.loc[all_coordinates['iata_code'] == airport]
+    if len(df) == 0: raise Exception(f'Unable to find airport code {airport}')
+
+    row = df.iloc[0]
+    coordinates = row['coordinates'].split(', ')
+    return [
+        float(coordinates[0]),
+        float(coordinates[1])
+    ]
+
+
 class Tests(unittest.TestCase):
+
+    def test_get_coordinates(self):
+        path = '../data/airport-codes_csv.csv'
+        all_coordinates = pd.read_csv(path)
+        self.assertEqual([-0.461941, 51.4706], get_coordinates(all_coordinates, 'LHR'))
+        self.assertEqual([13.2877, 52.5597], get_coordinates(all_coordinates, 'TXL'))
+
+    def test_get_coordinates_bad_airport_code(self):
+        path = '../data/airport-codes_csv.csv'
+        all_coordinates = pd.read_csv(path)
+
+        with self.assertRaises(Exception) as ex:
+            self.assertEqual([0, 0], get_coordinates(all_coordinates, 'XXX'))
+
+        self.assertEqual('Unable to find airport code XXX', str(ex.exception))
 
     def test_determine_trips(self):
         data = [
@@ -107,13 +135,14 @@ class Tests(unittest.TestCase):
 
     def test_display_example(self):
         self.skipTest('')
-        path = '../examples/flights.txt'
+        path = '../data/flights.txt'
         with open(path) as file:
             data = file.readlines()
 
         data = get_locations(data)
-        full_names = get_full_names(data)
-        for datum in full_names: print(datum)
+        trips = determine_trips(data)
+        for trip in trips:
+            print(f'{trip}: {trips[trip]}')
 
 
 if __name__ == '__main__':
