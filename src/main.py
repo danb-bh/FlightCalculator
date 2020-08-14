@@ -1,6 +1,6 @@
 import unittest
 import pandas as pd
-
+import googlemaps
 from math import sin, cos, sqrt, atan2, radians
 
 path_to_all_coordinates_csv = '../data/airport-codes_csv.csv'
@@ -100,7 +100,7 @@ def populate_location_details(all_coordinates: pd.DataFrame, location: Location)
     location.longitude = float(coordinates[1])
 
 
-def calculate_distance(trip: Trip):
+def determine_distance(trip: Trip):
     radius_of_earth = 6373.0
 
     lat1 = radians(trip.depart.latitude)
@@ -120,7 +120,7 @@ def calculate_distance(trip: Trip):
 def populate_trip_details(all_coordinate: pd.DataFrame, trip: Trip):
     populate_location_details(all_coordinate, trip.depart)
     populate_location_details(all_coordinate, trip.arrive)
-    calculate_distance(trip)
+    determine_distance(trip)
 
 
 class Tests(unittest.TestCase):
