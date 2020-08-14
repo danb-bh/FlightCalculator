@@ -1,0 +1,235 @@
+from,to,repetitions
+-------------------
+
+london,malaga,2
+malaga,london,2
+london,dubai
+dubai,bangkok
+bangkok,chang mai
+chang mai,ko samui
+phuket,bangkok
+bangkok,dubai
+dubai,london
+london,dubai,2
+dubai,london,2
+london,qatar
+qatar,hong kong
+hong kong,qatar
+qatar,london
+london,colombo
+colombo,mali
+mali,dubai
+dubai,london
+london,accra,2
+accra,london,2
+london,tenerife
+tenerife,london
+london,marakesh
+marakesh,london
+london,algiers
+algiers,london
+london,lisbon
+lisbon,salvador
+salvador,lisbon
+lisbon,london
+london,kingston, jamaica,2
+kingston, jamaica,london,2
+london,las vegas
+las vegas,los angeles
+san francisco,london
+london,miami
+miami,london
+london,new york
+new york,london
+london,barbados
+barbado,trinidad
+trindad,suriname
+surinam,belem
+belem,sao luis
+sao luis,fortaleza
+fortaleza,natal
+natal,recife
+recife,salvador
+salvador,porto seguro
+porto seguro,belo horizonte
+belo horizonte,curitiba
+curitiba,foz do iguacu
+foz do iguacu,florianopolis
+navegantes,rio de janeiro
+rio de janeiro,panama city
+panama city,cartagena
+cartagena,panama city
+panama city,cancun
+cancun,new york
+new york,london
+london,sao paulo
+sao paulo,porto seguro
+porto seguro,sao paulo
+sao paolo,buenos aires
+buenos aires,sao paulo
+sao paulo,london
+london,athens
+athens,london
+london,prague
+prague,london
+london,helsinki
+helsinki,london
+london,stockholm,2
+stockholm,london,2
+london,vilnius
+vilnius,london
+london copenhagen
+copenhagen,aalborg
+aalborg,copenhagen
+copenhagen,london
+london,copenhagen
+copenhagen,london
+london,dublin,2
+dublin,london,2
+london,faro
+faro,london
+london,barcelona
+barcelona,london
+london,nice
+nice,london
+london,rome
+rome,belgrade
+dubrovnik,london
+london,zagreb
+zagreb,london
+london,amalfi
+amalfi,london
+london,luxembourg city
+luxembourg city,london
+london,venice
+venice,london
+london,verona
+verona,london
+london,rotterdam
+rotterdam,london
+london,dusseldorf
+amsterdam,london
+london,amsterdam,2
+amsterdam,london,2
+london,berlin
+berlin,london
+london,frankfurt
+frankfurt,london
+london,nuremberg,2
+munich,london,2
+london,dusseldorf,6
+dusseldorf,london,6
+london,geneva
+geneva,london
+london,corfu
+corfu,london
+london,ibiza
+ibiza,london
+london,dubai
+dubai,bangkok
+bangkok,dubai
+dubai,london
+london,zagreb
+zagreb,london
+london,seoul
+seoul,tokyo
+tokyo,singapore
+singapore,tokyo
+tokyo,seoul
+seoul,london
+london,cape verde, boa vista
+cape verde boa vista,cape verde sal
+cape verde sal,cape verde boa vista
+london,amman
+amman,beirut
+beirut,paris
+paris,london
+london,dusseldorf
+dusseldorf,london
+london,porto
+porto,london
+london,nairobi
+nairobi,london
+
+April 2018
+----------
+london,dusseldorf,2
+dusseldorf,london,2
+
+May 2018
+--------
+london,dusseldorf,2
+dusseldorf,london,2
+london,luxembourg
+luxembourg,london
+
+June 2018
+---------
+london,cologne
+cologne,london
+
+July 2018
+---------
+london,copenhagen
+copenhagen,london
+london,lisbon
+lisbon,london
+
+October 2018
+------------
+Amsterdam,London
+LGW,CUN
+CUN,MXN
+MXN,CUN
+
+November 2018
+-------------
+CUN,LGW
+
+March 2019
+----------
+LHR,CGN
+CGN,LHR
+
+May 2019
+--------
+LHR,DEL
+DEL,LHR
+LHR,CDG
+CDG,LHR
+
+June 2019
+---------
+LGW,TXL
+TXL,LHR
+
+July 2019
+---------
+LHR,TXL
+TXL,LHR
+
+August 2019
+-----------
+LHR,ICN
+GMP,HND
+FUK,PUS
+PUS,VVO
+VVO,ICN
+ICN,LHR
+
+Sept 2019
+---------
+LGW,PRG
+PRG,LGW
+
+Oct 2019
+--------
+LTN,PRG
+PRG,LTN
+LTN,PRG
+PRG,LTN
+
+Nov 2019
+--------
+LGW,CUN
+CUN,LGW
