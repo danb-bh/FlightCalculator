@@ -1,6 +1,8 @@
 import unittest
 import pandas as pd
 
+from math import sin, cos, sqrt, atan2, radians
+
 path_to_all_coordinates_csv = '../data/airport-codes_csv.csv'
 path_to_flights = '../data/flights.txt'
 
@@ -85,7 +87,7 @@ def combine_trips(data):
     return [trip for trip in trips.values()]
 
 
-def populate_details(all_coordinates: pd.DataFrame, location: Location):
+def populate_location_details(all_coordinates: pd.DataFrame, location: Location):
     code = location.code
     df = all_coordinates.loc[all_coordinates['iata_code'] == code]
     if len(df) == 0: raise Exception(f'Unable to find airport code {code}')
@@ -98,19 +100,42 @@ def populate_details(all_coordinates: pd.DataFrame, location: Location):
     location.longitude = float(coordinates[1])
 
 
+def calculate_distance(trip: Trip):
+    radius_of_earth = 6373.0
+
+    lat1 = radians(trip.depart.latitude)
+    lon1 = radians(trip.depart.longitude)
+    lat2 = radians(trip.arrive.latitude)
+    lon2 = radians(trip.arrive.longitude)
+
+    diff_lat = lat2 - lat1
+    diff_long = lon2 - lon1
+
+    a = sin(diff_lat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(diff_long / 2) ** 2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+    trip.distance = radius_of_earth * c
+
+
+def populate_trip_details(all_coordinate: pd.DataFrame, trip: Trip):
+    populate_location_details(all_coordinate, trip.depart)
+    populate_location_details(all_coordinate, trip.arrive)
+    calculate_distance(trip)
+
+
 class Tests(unittest.TestCase):
 
     def test_get_coordinates(self):
         all_coordinates = pd.read_csv(path_to_all_coordinates_csv)
 
         lhr = Location('LHR')
-        populate_details(all_coordinates, lhr)
+        populate_location_details(all_coordinates, lhr)
         self.assertEqual('London Heathrow Airport', lhr.name)
         self.assertEqual(-0.461941, lhr.latitude)
         self.assertEqual(51.4706, lhr.longitude)
 
         txl = Location('TXL')
-        populate_details(all_coordinates, txl)
+        populate_location_details(all_coordinates, txl)
         self.assertEqual('Berlin-Tegel Airport', txl.name)
         self.assertEqual(13.2877, txl.latitude)
         self.assertEqual(52.5597, txl.longitude)
@@ -119,7 +144,7 @@ class Tests(unittest.TestCase):
         all_coordinates = pd.read_csv(path_to_all_coordinates_csv)
 
         with self.assertRaises(Exception) as ex:
-            self.assertEqual([0, 0], populate_details(all_coordinates, Location('XXX')))
+            self.assertEqual([0, 0], populate_location_details(all_coordinates, Location('XXX')))
 
         self.assertEqual('Unable to find airport code XXX', str(ex.exception))
 
@@ -177,14 +202,16 @@ class Tests(unittest.TestCase):
         all_coordinates = pd.read_csv(path_to_all_coordinates_csv)
         trips = combine_trips(get_trips(data))
 
-        for trip in trips[:10]:
-            populate_details(all_coordinates, trip.depart)
-            populate_details(all_coordinates, trip.arrive)
+        for trip in trips[:1]:
+            populate_trip_details(all_coordinates, trip)
 
             print(repr(trip))
             print('  ' + repr(trip.depart))
             print('  ' + repr(trip.arrive))
             print()
+
+        total = sum([trip.distance for trip in trips])
+        print(total)
 
 
 if __name__ == '__main__':
