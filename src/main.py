@@ -15,7 +15,7 @@ def get_locations(data):
             whitespace_removed.append(element.strip())
 
         previous = current
-        current = ','.join(whitespace_removed)
+        current = ','.join(whitespace_removed).upper()
         if previous is None: continue
 
         if previous[0] != '-' and current[0] != '-':
@@ -27,27 +27,23 @@ def get_locations(data):
 def find_full_names(data):
     found = set()
     for line in data:
-        elements = line.split(',')
-        first = elements[0]
-        second = elements[1]
-        if len(first) > 3 and first not in found:
-            found.add(first)
-            yield first
-        if len(second) > 3 and second not in found:
-            found.add(second)
-            yield second
+        elements = line.split(',')[:2]
+        for element in elements:
+            if len(element) > 3 and element not in found:
+                found.add(element)
+                yield element
 
 
 class Tests(unittest.TestCase):
 
     def test_find_full_names(self):
         data = [
-            'london,malaga,2',
-            'malaga,london,2',
+            'LONDON,MALAGA,2',
+            'MALAGA,LONDON,2',
             'LHR,TXL',
             'TXL,LHR']
 
-        expected = ['london', 'malaga']
+        expected = ['LONDON', 'MALAGA']
         actual = list(find_full_names(data))
         self.assertEqual(expected, actual)
 
@@ -65,8 +61,8 @@ class Tests(unittest.TestCase):
             'TXL,LHR']
 
         expected = [
-            'london,malaga,2',
-            'malaga,london,2',
+            'LONDON,MALAGA,2',
+            'MALAGA,LONDON,2',
             'LHR,TXL',
             'TXL,LHR']
 
@@ -74,13 +70,14 @@ class Tests(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_display_example(self):
-        self.skipTest('')
+        # self.skipTest('')
         path = '../examples/flights.txt'
         with open(path) as file:
-            raw_data = file.readlines()
+            data = file.readlines()
 
-        data = get_locations(raw_data)
-        for datum in data: print(datum)
+        data = get_locations(data)
+        full_names = find_full_names(data)
+        for datum in full_names: print(datum)
 
 
 if __name__ == '__main__':

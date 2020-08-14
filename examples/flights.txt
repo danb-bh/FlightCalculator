@@ -78,7 +78,7 @@ london,stockholm,2
 stockholm,london,2
 london,vilnius
 vilnius,london
-london copenhagen
+london,copenhagen
 copenhagen,aalborg
 aalborg,copenhagen
 copenhagen,london
