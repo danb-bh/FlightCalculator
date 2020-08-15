@@ -1,7 +1,7 @@
 import unittest
+
 import pandas as pd
-import googlemaps
-from math import sin, cos, sqrt, atan2, radians
+from geopy.distance import distance
 
 path_to_all_coordinates_csv = '../data/airport-codes_csv.csv'
 path_to_flights = '../data/flights.txt'
@@ -96,25 +96,19 @@ def populate_location_details(all_coordinates: pd.DataFrame, location: Location)
     location.name = row['name']
 
     coordinates = row['coordinates'].split(', ')
-    location.latitude = float(coordinates[0])
-    location.longitude = float(coordinates[1])
+    location.longitude = float(coordinates[0])
+    location.latitude = float(coordinates[1])
 
 
 def determine_distance(trip: Trip):
-    radius_of_earth = 6373.0
+    depart = [trip.depart.latitude, trip.depart.longitude]
+    arrive = [trip.arrive.latitude, trip.arrive.longitude]
 
-    lat1 = radians(trip.depart.latitude)
-    lon1 = radians(trip.depart.longitude)
-    lat2 = radians(trip.arrive.latitude)
-    lon2 = radians(trip.arrive.longitude)
-
-    diff_lat = lat2 - lat1
-    diff_long = lon2 - lon1
-
-    a = sin(diff_lat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(diff_long / 2) ** 2
-    c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-    trip.distance = radius_of_earth * c
+    try:
+        trip.distance = distance(depart, arrive).km
+    except Exception:
+        print(f'Error processing {trip}: {depart} to {arrive}')
+        raise
 
 
 def populate_trip_details(all_coordinate: pd.DataFrame, trip: Trip):
@@ -131,14 +125,14 @@ class Tests(unittest.TestCase):
         lhr = Location('LHR')
         populate_location_details(all_coordinates, lhr)
         self.assertEqual('London Heathrow Airport', lhr.name)
-        self.assertEqual(-0.461941, lhr.latitude)
-        self.assertEqual(51.4706, lhr.longitude)
+        self.assertEqual(51.4706, lhr.latitude)
+        self.assertEqual(-0.461941, lhr.longitude)
 
         txl = Location('TXL')
         populate_location_details(all_coordinates, txl)
         self.assertEqual('Berlin-Tegel Airport', txl.name)
-        self.assertEqual(13.2877, txl.latitude)
-        self.assertEqual(52.5597, txl.longitude)
+        self.assertEqual(52.5597, txl.latitude)
+        self.assertEqual(13.2877, txl.longitude)
 
     def test_get_coordinates_bad_airport_code(self):
         all_coordinates = pd.read_csv(path_to_all_coordinates_csv)
@@ -202,16 +196,12 @@ class Tests(unittest.TestCase):
         all_coordinates = pd.read_csv(path_to_all_coordinates_csv)
         trips = combine_trips(get_trips(data))
 
-        for trip in trips[:1]:
+        for trip in trips:
             populate_trip_details(all_coordinates, trip)
 
-            print(repr(trip))
-            print('  ' + repr(trip.depart))
-            print('  ' + repr(trip.arrive))
-            print()
-
-        total = sum([trip.distance for trip in trips])
-        print(total)
+        km = sum(trip.distance for trip in trips)
+        miles = km / 1.6093
+        print(f'Total distance travelled is {km:,.0f} km, or {miles:,.0f} miles')
 
 
 if __name__ == '__main__':
