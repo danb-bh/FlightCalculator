@@ -32,7 +32,7 @@ The method `Tests.test_display_example(..)` reads the file `data/flights.txt` an
 
 ## Data file location and format
 
-The source file for your flight data is `data/flights.txt`. The format is CSV-ish. The columns are `from,to,repititions`, with locations specified using three-character IATA airport codes. `repetitions` is a shorthand notation to indicate multiple trips between the locations specified.
+The source file for flight data is `data/flights.txt`. The format is CSV-ish. The columns are `from,to,repititions`, with locations specified using three-character IATA airport codes. `repetitions` is a shorthand notation to indicate multiple trips between the locations specified.
 
 You can have sub-headings throughout the file, which are denoted by the following line starting with a `-`. Blank lines are ignored.
 
